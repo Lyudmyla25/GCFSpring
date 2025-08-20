@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book</title>
+</head>
+<body>
+<h1>Edit Book</h1>
+<form th:action="@{'/books/edit/' + ${book.id}}" th:object="${book}" method="post">
+    <label>ID: <input type="number" th:field="*{id}" readonly></label><br>
+    <label>Title: <input type="text" th:field="*{title}" required></label><br>
+    <label>Author: <input type="text" th:field="*{author}" required></label><br>
+    <button type="submit">Update Book</button>
+</form>
+<a href="/books">Back to Book List</a>
+</body>
+</html>
