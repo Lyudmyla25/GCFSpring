@@ -1,6 +1,7 @@
 package org.example.gcfspring.controller;
 
 import org.example.gcfspring.entity.Book;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,10 +22,10 @@ public class Book2Controller {
     }
 
     @GetMapping("/getAllBooks")
-    public List<Book> listBooks(@RequestParam("isSample") Boolean isSample) {
+    public ResponseEntity<List<Book>> listBooks(@RequestParam("isSample") Boolean isSample) {
         if (isSample) {
-            return books.subList(0, 1);
+            return ResponseEntity.ok().body(books.subList(0, 1));
         }
-        return books;
+        return ResponseEntity.ok().body(books);
     }
 }
