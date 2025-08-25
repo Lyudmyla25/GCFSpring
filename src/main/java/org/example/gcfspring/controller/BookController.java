@@ -1,62 +1,63 @@
 package org.example.gcfspring.controller;
 
 import org.example.gcfspring.entity.Book;
+import org.example.gcfspring.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 @RequestMapping("/books")
 public class BookController {
-    private final List<Book> books = new ArrayList<>();
+    private final BookService bookService;
 
-    public BookController() {
-        books.add(new Book(1L, "Book 1", "Author 1"));
-        books.add(new Book(2L, "Book 2", "Author 2"));
-        books.add(new Book(3L, "Book 3", "Author 3"));
+    @Autowired
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping("")
     public String listBooks(Model model) {
-        model.addAttribute("books", books);
+        model.addAttribute("books", bookService.findAll());
         return "book-list";
     }
 
     @GetMapping("/add")
     public String showAddBookForm(Model model) {
-        model.addAttribute("book", new Book(15L,"", ""));
+        model.addAttribute("book", new Book());
         return "add-book";
     }
 
     @PostMapping("/add")
     public String addBook(@ModelAttribute Book book) {
-        books.add(book);
+        bookService.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditBookForm(@PathVariable Long id, Model model) {
-        Book book = books.stream().filter(b -> b.getId().equals(id)).findFirst().orElse(null);
+        Book book = bookService.findById(id).orElse(null);
         model.addAttribute("book", book);
         return "edit-book";
     }
 
     @PostMapping("/edit/{id}")
     public String editBook(@PathVariable Long id, @ModelAttribute Book book) {
-        Book existingBook = books.stream().filter(b -> b.getId().equals(id)).findFirst().orElse(null);
-        if (existingBook != null) {
-            existingBook.setTitle(book.getTitle());
-            existingBook.setAuthor(book.getAuthor());
-        }
+        book.setId(id);
+        bookService.save(book);
         return "redirect:/books";
     }
 
     @PostMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id) {
-        books.removeIf(book -> book.getId().equals(id));
+        bookService.deleteById(id);
+        return "redirect:/books";
+    }
+
+    @PostMapping("/deleteAll")
+    public String clearLibrary() {
+        bookService.deleteAll();
         return "redirect:/books";
     }
 }

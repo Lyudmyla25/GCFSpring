@@ -7,7 +7,7 @@
 <body>
 <h1>Add New Book</h1>
 <form th:action="@{/books/add}" th:object="${book}" method="post">
-    <label>ID: <input type="number" th:field="*{id}" required></label><br>
+    <!-- ID field removed for new books -->
     <label>Title: <input type="text" th:field="*{title}" required></label><br>
     <label>Author: <input type="text" th:field="*{author}" required></label><br>
     <button type="submit">Add Book</button>
