@@ -20,6 +20,7 @@ public class BookService {
     }
 
     public List<Book> findAll() {
+        // log getting all the books
         return bookStorage.findAll();
     }
 
