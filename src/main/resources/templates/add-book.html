@@ -7,9 +7,12 @@
 <body>
 <h1>Add New Book</h1>
 <form th:action="@{/books/add}" th:object="${book}" method="post">
-    <!-- ID field removed for new books -->
-    <label>Title: <input type="text" th:field="*{title}" required></label><br>
-    <label>Author: <input type="text" th:field="*{author}" required></label><br>
+    <label>Title: <input type="text" th:field="*{title}" required></label>
+    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+    <br>
+    <label>Author Name: <input type="text" th:field="*{authorName}" required></label>
+    <div th:if="${#fields.hasErrors('authorName')}" th:errors="*{authorName}"></div>
+    <br>
     <button type="submit">Add Book</button>
 </form>
 <a href="/books">Back to Book List</a>

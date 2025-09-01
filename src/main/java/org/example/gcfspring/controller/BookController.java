@@ -1,11 +1,14 @@
 package org.example.gcfspring.controller;
 
+import org.example.gcfspring.dto.BookDTO;
 import org.example.gcfspring.entity.Book;
 import org.example.gcfspring.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/books")
@@ -25,13 +28,16 @@ public class BookController {
 
     @GetMapping("/add")
     public String showAddBookForm(Model model) {
-        model.addAttribute("book", new Book());
+        model.addAttribute("book", new BookDTO("", ""));
         return "add-book";
     }
 
     @PostMapping("/add")
-    public String addBook(@ModelAttribute Book book) {
-        bookService.save(book);
+    public String addBook(@Valid @ModelAttribute BookDTO book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "add-book";
+        }
+        bookService.saveFromDTO(book);
         return "redirect:/books";
     }
 
